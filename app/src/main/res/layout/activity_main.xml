@@ -4,8 +4,4 @@
     android:id="@+id/container"
     android:layout_height="match_parent">
 
-    <com.briefing.clockapp2.ClockView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
 </FrameLayout>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.ViewGroup;
 
 import java.time.LocalTime;
@@ -15,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        ClockView clockView = new ClockView(this, null);
+        setContentView(clockView);
     }
 
     @Override
