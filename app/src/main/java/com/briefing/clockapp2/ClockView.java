@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -21,9 +22,9 @@ public class ClockView extends View {
     private Paint minuteHandPaint;
     private Paint secondHandPaint;
 
-    private int centerX;
-    private int centerY;
-    private int radius;
+    private float centerX;
+    private float centerY;
+    private float radius;
 
     private Clock clock;
     private Thread clockThread;
@@ -56,17 +57,6 @@ public class ClockView extends View {
     public ClockView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         clock = new Clock();
-        hourHandPaint = new Paint();
-        hourHandPaint.setColor(Color.BLACK);
-        hourHandPaint.setStrokeWidth(radius - 120);
-
-        minuteHandPaint = new Paint();
-        minuteHandPaint.setColor(Color.BLACK);
-        minuteHandPaint.setStrokeWidth(radius - 80);
-
-        secondHandPaint = new Paint();
-        secondHandPaint.setColor(Color.RED);
-        secondHandPaint.setStrokeWidth(radius - 40);
         clockThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -114,30 +104,45 @@ public class ClockView extends View {
         int hour = clock.getHours();
         int minute = clock.getMinutes();
         int second = clock.getSeconds();
-
+        float secondHandLength = radius - 100;
+        float minuteHandLength = radius - 150;
+        float hourHandLength = radius - 200;
         paint = new Paint();
-        paint.setColor(Color.argb(0, 0, 0, 0));
+        paint.setColor(Color.BLACK);
+        paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
         canvas.drawCircle(centerX, centerY, radius, paint);
-
+        paint.setTextSize(60);
+        paint.setTextAlign(Paint.Align.CENTER);
+        for (int i = 1; i <= 12; i++) {
+            float numberX = (float) (centerX + radius * Math.cos(Math.toRadians(i * 30 - 90)));
+            float numberY = (float) (centerY + radius * Math.sin(Math.toRadians(i * 30 - 90)));
+            canvas.drawText(String.valueOf(i), numberX, numberY, paint);
+        }
         // Рисуем стрелки часов
-        canvas.save();
-        canvas.rotate(90);
-        canvas.rotate(30 * hour + 0.5f * minute, centerX, centerY);
-        canvas.drawLine(centerX, centerY, centerX, centerY - radius / 2, hourHandPaint);
-        canvas.restore();
+        hourHandPaint = new Paint();
+        hourHandPaint.setColor(Color.BLACK);
+        hourHandPaint.setStrokeWidth(15);
+        hourHandPaint.setStyle(Paint.Style.STROKE);
+        canvas.drawLine(centerX, centerY, centerX + hourHandLength * (float) Math.cos(Math.toRadians(hour * 30 - 90)),
+                centerY + hourHandLength * (float) Math.sin(Math.toRadians(hour * 30 - 90)), hourHandPaint);
 
-        canvas.save();
-        canvas.rotate(90);
-        canvas.rotate(6 * minute + 0.1f * second, centerX, centerY);
-        canvas.drawLine(centerX, centerY, centerX, centerY - radius * 0.7f, minuteHandPaint);
-        canvas.restore();
+        minuteHandPaint = new Paint();
+        minuteHandPaint.setColor(Color.RED);
+        minuteHandPaint.setStrokeWidth(10);
+        minuteHandPaint.setStyle(Paint.Style.STROKE);
+        canvas.drawLine(centerX, centerY, centerX + minuteHandLength * (float) Math.cos(Math.toRadians(minute * 6 - 90)),
+                centerY + minuteHandLength * (float) Math.sin(Math.toRadians(minute * 6 - 90)), minuteHandPaint);
 
-        canvas.save();
-        canvas.rotate(90);
-        canvas.rotate(6 * second, centerX, centerY);
-        canvas.drawLine(centerX, centerY, centerX, centerY - radius * 0.9f, secondHandPaint);
-        canvas.restore();
+
+
+        secondHandPaint = new Paint();
+        secondHandPaint.setColor(Color.GREEN);
+        secondHandPaint.setStrokeWidth(5);
+        secondHandPaint.setStyle(Paint.Style.STROKE);
+        canvas.drawLine(centerX, centerY, centerX + secondHandLength * (float) Math.cos(Math.toRadians(second * 6 - 90)),
+                centerY + secondHandLength * (float) Math.sin(Math.toRadians(second * 6 - 90)), secondHandPaint);
+
     }
 }
