@@ -93,8 +93,8 @@ public class ClockView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         centerX = w / 2;
         centerY = h / 2;
-        radius = Math.min(w, h) / 2 - 80;
-        stroke = radius / 10;
+        radius = Math.min(w, h) / 2 - Math.min(w, h) / 10 ;
+        stroke = radius / 18;
         strokeOfHour = radius / 12;
         strokeOfMinute = radius / 18;
         strokeOfSecond = radius / 26;
@@ -108,8 +108,8 @@ public class ClockView extends View {
         int hour = clock.getHours();
         int minute = clock.getMinutes();
         int second = clock.getSeconds();
-        float secondHandLength = radius - (radius/30);
-        float minuteHandLength = radius - (radius/4);
+        float secondHandLength = radius - (radius/6);
+        float minuteHandLength = radius - (radius/3);
         float hourHandLength = radius - (radius/2);
 
         paint.setColor(Color.LTGRAY);
