@@ -28,6 +28,11 @@ public class ClockView extends View {
     private final Clock clock;
     private final Thread clockThread;
     private final Paint textPaint;
+    private float strokeOfSecond;
+    private float strokeOfMinute;
+    private float textSize;
+    private float stroke;
+    private float strokeOfHour;
 
     //в зависимости от версии получаем данные о времени
     void sendData(Clock clock) {
@@ -89,6 +94,11 @@ public class ClockView extends View {
         centerX = w / 2;
         centerY = h / 2;
         radius = Math.min(w, h) / 2 - 80;
+        stroke = radius / 10;
+        strokeOfHour = radius / 12;
+        strokeOfMinute = radius / 18;
+        strokeOfSecond = radius / 26;
+        textSize = radius / 7;
     }
 
     @Override
@@ -98,45 +108,45 @@ public class ClockView extends View {
         int hour = clock.getHours();
         int minute = clock.getMinutes();
         int second = clock.getSeconds();
-        float secondHandLength = radius - 50;
-        float minuteHandLength = radius - 100;
-        float hourHandLength = radius - 150;
+        float secondHandLength = radius - (radius/30);
+        float minuteHandLength = radius - (radius/4);
+        float hourHandLength = radius - (radius/2);
 
         paint.setColor(Color.LTGRAY);
         paint.setStyle(Paint.Style.FILL);
-        paint.setStrokeWidth(8);
+        paint.setStrokeWidth(stroke);
         paint.setShadowLayer(10, 0, 0, Color.BLACK);
-        canvas.drawCircle(centerX, centerY, radius + 60, paint);
+        canvas.drawCircle(centerX, centerY, radius + (radius/6), paint);
         paint.setColor(Color.DKGRAY);
         canvas.drawCircle(centerX, centerY, radius/20, paint);
         paint.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(centerX, centerY, radius + 60, paint);
+        canvas.drawCircle(centerX, centerY, radius + (radius/6), paint);
 
-        textPaint.setTextSize(50);
+        textPaint.setTextSize(textSize);
         textPaint.setColor(Color.WHITE);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setShadowLayer(10, 0, 0, Color.BLACK);
         for (int i = 1; i <= 12; i++) {
-            float numberX = (float) (centerX + radius * Math.cos(Math.toRadians(i * 30 - 90)));
-            float numberY = (float) (centerY + radius * Math.sin(Math.toRadians(i * 30 - 90)));
+            float numberX = (float) (centerX + (radius/1.12f) * Math.cos(Math.toRadians(i * 30 - 90)));
+            float numberY = (float) (centerY + (radius/1.12f) * Math.sin(Math.toRadians(i * 30 - 90)));
             canvas.drawText(String.valueOf(i), numberX, numberY, textPaint);
         }
         // Рисуем стрелки часов
         hourHandPaint.setColor(Color.DKGRAY);
-        hourHandPaint.setStrokeWidth(20);
+        hourHandPaint.setStrokeWidth(strokeOfHour);
         hourHandPaint.setStyle(Paint.Style.STROKE);
         canvas.drawLine(centerX, centerY, centerX + hourHandLength * (float) Math.cos(Math.toRadians(hour * 30 - 90)),
                 centerY + hourHandLength * (float) Math.sin(Math.toRadians(hour * 30 - 90)), hourHandPaint);
 
         minuteHandPaint.setColor(Color.DKGRAY);
-        minuteHandPaint.setStrokeWidth(15);
+        minuteHandPaint.setStrokeWidth(strokeOfMinute);
         minuteHandPaint.setStyle(Paint.Style.STROKE);
         canvas.drawLine(centerX, centerY, centerX + minuteHandLength * (float) Math.cos(Math.toRadians(minute * 6 - 90)),
                 centerY + minuteHandLength * (float) Math.sin(Math.toRadians(minute * 6 - 90)), minuteHandPaint);
 
         secondHandPaint.setColor(Color.DKGRAY);
-        secondHandPaint.setStrokeWidth(5);
+        secondHandPaint.setStrokeWidth(strokeOfSecond);
         secondHandPaint.setStyle(Paint.Style.STROKE);
         canvas.drawLine(centerX, centerY, centerX + secondHandLength * (float) Math.cos(Math.toRadians(second * 6 - 90)),
                 centerY + secondHandLength * (float) Math.sin(Math.toRadians(second * 6 - 90)), secondHandPaint);
